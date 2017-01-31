@@ -27,7 +27,7 @@ namespace ParallelBuildDebuggingLogger
             foreach (var propertyName in GlobalProperties.Keys)
             {
                 string parentValue;
-                if (
+                if (otherProjects.ContainsKey(ParentProjectInstanceId) &&
                     otherProjects[ParentProjectInstanceId].GlobalProperties.TryGetValue(propertyName, out parentValue) &&
                     parentValue == GlobalProperties[propertyName])
                 {
