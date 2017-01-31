@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Microsoft.Build.Framework;
 
@@ -7,6 +8,8 @@ namespace ParallelBuildDebuggingLogger
 {
     class ProjectBuildInfo
     {
+        public ProjectStartedEventArgs StartedEventArgs { get; private set; }
+
         public int ProjectInstanceId { get; set; }
 
         public int ParentProjectInstanceId { get; set; }
@@ -16,6 +19,7 @@ namespace ParallelBuildDebuggingLogger
 
         public ProjectBuildInfo(ProjectStartedEventArgs projectStartedEventArgs, IReadOnlyDictionary<int, ProjectBuildInfo> otherProjects)
         {
+            StartedEventArgs = projectStartedEventArgs;
             ParentProjectInstanceId = projectStartedEventArgs.ParentProjectBuildEventContext.ProjectInstanceId;
             ProjectInstanceId = projectStartedEventArgs.BuildEventContext.ProjectInstanceId;
             GlobalProperties = projectStartedEventArgs.GlobalProperties;
@@ -34,6 +38,12 @@ namespace ParallelBuildDebuggingLogger
                     UniqueProperties[propertyName] = GlobalProperties[propertyName];
                 }
             }
+        }
+
+        public override string ToString()
+        {
+            return
+                $"{{{ProjectInstanceId}: \"{StartedEventArgs.ProjectFile}\" + <{string.Join("; ", UniqueProperties.Select(up => $"{up.Key} = {up.Value}"))}>}}";
         }
     }
 }

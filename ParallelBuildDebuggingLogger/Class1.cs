@@ -24,9 +24,16 @@ namespace ParallelBuildDebuggingLogger
         {
             var info = new ProjectBuildInfo(projectStartedEventArgs, buildInfos);
 
-            buildInfos.Add(info.ProjectInstanceId, info);
+            if (buildInfos.ContainsKey(info.ProjectInstanceId))
+            {
+                Console.WriteLine($"Reentering project {info} to build targets {info.StartedEventArgs.TargetNames}");
+            }
+            else
+            {
+                buildInfos.Add(info.ProjectInstanceId, info);
+                Console.WriteLine($"Project {info} built by project {info.ParentProjectInstanceId} -- targets '{info.StartedEventArgs.TargetNames}'");
+            }
 
-            Console.WriteLine($"Project {info.ProjectInstanceId} built by project {info.ParentProjectInstanceId} with property diff {string.Join("; ", info.UniqueProperties.Select(up => $"{up.Key} = {up.Value}"))}");
         }
     }
 }
