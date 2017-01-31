@@ -9,15 +9,24 @@ namespace ParallelBuildDebuggingLogger
 {
     public class Class1 : Logger
     {
-        private StringBuilder log;
-
         private Dictionary<int, ProjectBuildInfo> buildInfos = new Dictionary<int, ProjectBuildInfo>();
+
+        private string[] targetsOfInterest;
 
         public override void Initialize(IEventSource eventSource)
         {
-            log = new StringBuilder();
+            targetsOfInterest = Parameters?.Split(';');
 
             eventSource.ProjectStarted += ProjectStartedHandler;
+            eventSource.TargetStarted += TargetStartedHandler;
+        }
+
+        private void TargetStartedHandler(object sender, TargetStartedEventArgs e)
+        {
+            if (targetsOfInterest != null && targetsOfInterest.Contains(e.TargetName, StringComparer.OrdinalIgnoreCase))
+            {
+                Console.WriteLine($"Building target '{e.TargetName}' in {buildInfos[e.BuildEventContext.ProjectInstanceId]}");
+            }
         }
 
         private void ProjectStartedHandler(object sender, ProjectStartedEventArgs projectStartedEventArgs)
