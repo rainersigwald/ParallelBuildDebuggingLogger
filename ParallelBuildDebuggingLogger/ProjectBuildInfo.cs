@@ -16,6 +16,7 @@ namespace ParallelBuildDebuggingLogger
 
         public IDictionary<string, string> GlobalProperties { get; set; }
         public Dictionary<string, string> UniqueProperties { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, string> RemovedProperties { get; set; } = new Dictionary<string, string>();
 
         public ProjectBuildInfo(ProjectStartedEventArgs projectStartedEventArgs, IReadOnlyDictionary<int, ProjectBuildInfo> otherProjects)
         {
@@ -38,12 +39,23 @@ namespace ParallelBuildDebuggingLogger
                     UniqueProperties[propertyName] = GlobalProperties[propertyName];
                 }
             }
+
+            if (otherProjects.TryGetValue(ParentProjectInstanceId, out ProjectBuildInfo other))
+            {
+                foreach (var propertyName in other.GlobalProperties.Keys)
+                {
+                    if (!GlobalProperties.TryGetValue(propertyName, out _))
+                    {
+                        RemovedProperties[propertyName] = other.GlobalProperties[propertyName];
+                    }
+                }
+            }
         }
 
         public override string ToString()
         {
             return
-                $"{{{ProjectInstanceId}: \"{StartedEventArgs.ProjectFile}\" + <{string.Join("; ", UniqueProperties.Select(up => $"{up.Key} = {up.Value}"))}>}}";
+                $"{{{ProjectInstanceId}: \"{StartedEventArgs.ProjectFile}\" + <{string.Join("; ", UniqueProperties.Select(up => $"{up.Key} = {up.Value}"))}> - <{string.Join("; ", RemovedProperties.Select(rp => rp.Key))}>}}";
         }
     }
 }
