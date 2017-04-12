@@ -35,7 +35,7 @@ namespace ParallelBuildDebuggingLogger
 
             if (buildInfos.ContainsKey(info.ProjectInstanceId))
             {
-                Console.WriteLine($"Reentering project {info} to build targets {info.StartedEventArgs.TargetNames}");
+                Console.WriteLine($"Reentering project {info} from project {info.ParentProjectInstanceId} to build targets '{info.StartedEventArgs.TargetNames}'");
             }
             else
             {
