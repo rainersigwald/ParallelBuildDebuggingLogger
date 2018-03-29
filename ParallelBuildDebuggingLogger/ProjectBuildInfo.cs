@@ -59,8 +59,21 @@ namespace ParallelBuildDebuggingLogger
 
         public override string ToString()
         {
+            string upDescription = string.Empty;
+            string rpDescription = string.Empty;
+
+            if (UniqueProperties.Any())
+            {
+                upDescription = $" + <{string.Join("; ", UniqueProperties.Select(up => $"{up.Key} = {up.Value}"))}>";
+            }
+
+            if (RemovedProperties.Any())
+            {
+                rpDescription = $" - <{string.Join("; ", RemovedProperties.Select(rp => rp.Key))}>";
+            }
+
             return
-                $"{{{ProjectInstanceId}: \"{StartedEventArgs.ProjectFile}\" + <{string.Join("; ", UniqueProperties.Select(up => $"{up.Key} = {up.Value}"))}> - <{string.Join("; ", RemovedProperties.Select(rp => rp.Key))}>}}";
+                $"{{{ProjectInstanceId}: \"{StartedEventArgs.ProjectFile}\"{upDescription}{rpDescription}}}";
         }
     }
 }
