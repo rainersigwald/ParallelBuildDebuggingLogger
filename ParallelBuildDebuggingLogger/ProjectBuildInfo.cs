@@ -25,6 +25,11 @@ namespace ParallelBuildDebuggingLogger
             ProjectInstanceId = projectStartedEventArgs.BuildEventContext.ProjectInstanceId;
             GlobalProperties = projectStartedEventArgs.GlobalProperties;
 
+            if (GlobalProperties == null)
+            {
+                return;
+            }
+
             foreach (var propertyName in GlobalProperties.Keys)
             {
                 string parentValue;
