@@ -12,6 +12,7 @@ namespace ParallelBuildDebuggingLogger
     public class Class1 : Logger
     {
         private Dictionary<int, ProjectBuildInfo> buildInfos = new Dictionary<int, ProjectBuildInfo>();
+        private List<(int, int)> additionalEdges = new List<(int, int)>();
 
         private string[] targetsOfInterest;
 
@@ -38,6 +39,7 @@ namespace ParallelBuildDebuggingLogger
 
             if (buildInfos.ContainsKey(info.ProjectInstanceId))
             {
+                additionalEdges.Add((info.ParentProjectInstanceId, info.ProjectInstanceId));
                 //Console.WriteLine($"Reentering project {info} to build targets {info.StartedEventArgs.TargetNames}");
             }
             else
@@ -110,6 +112,12 @@ namespace ParallelBuildDebuggingLogger
                 }
 
                 Console.WriteLine($"  p{buildInfo.ParentProjectInstanceId} --> p{buildInfo.ProjectInstanceId}");
+            }
+
+            foreach (var edge in additionalEdges)
+            {
+                Console.WriteLine($"  p{edge.Item1} --> p{edge.Item2}");
+
             }
         }
     }
