@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.Build.Framework;
@@ -48,12 +49,14 @@ namespace ParallelBuildDebuggingLogger
 
         private void BuildFinishedHandler(object sender, BuildFinishedEventArgs e)
         {
+            Console.WriteLine("graph TB");
+
             var projects = new ConcurrentDictionary<string, List<ProjectBuildInfo>>();
 
             foreach (var buildInfo in buildInfos.Values)
             {
                 projects.GetOrAdd(
-                    buildInfo.StartedEventArgs.ProjectFile, 
+                    buildInfo.StartedEventArgs.ProjectFile,
                     new List<ProjectBuildInfo>())
                     .Add(buildInfo);
             }
@@ -64,7 +67,7 @@ namespace ParallelBuildDebuggingLogger
                 var instances = project.Value;
                 if (instances.Count > 1)
                 {
-                    Console.WriteLine($"Project {path} was built multiple times:");
+                    Console.WriteLine($"  subgraph {Path.GetFileName(path)}");
 
                     var properties = new ConcurrentDictionary<string, string[]>();
                     var differentProperties = new ConcurrentDictionary<string, string[]>();
@@ -89,9 +92,24 @@ namespace ParallelBuildDebuggingLogger
 
                     for (int i = 0; i < instances.Count; i++)
                     {
-                        Console.WriteLine(string.Join(" ", differentProperties.Select(kvp => kvp.Key + ": " + kvp.Value[i])));
+                        Console.WriteLine($"    p{instances[i].ProjectInstanceId}[\"{string.Join(" ", differentProperties.Select(kvp => kvp.Key + "=" + (string.IsNullOrEmpty(kvp.Value[i]) ? "(null)" : kvp.Value[i])))}\"]");
                     }
+                    Console.WriteLine("  end");
                 }
+                else
+                {
+                    Console.WriteLine($"  p{project.Value[0].ProjectInstanceId}[\"{Path.GetFileName(path)}\"]");
+                }
+            }
+
+            foreach (var buildInfo in buildInfos.Values)
+            {
+                if (buildInfo.ParentProjectInstanceId < 0)
+                {
+                    continue;
+                }
+
+                Console.WriteLine($"  p{buildInfo.ParentProjectInstanceId} --> p{buildInfo.ProjectInstanceId}");
             }
         }
     }
