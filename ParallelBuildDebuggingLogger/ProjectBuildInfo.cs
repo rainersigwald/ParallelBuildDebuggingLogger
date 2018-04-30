@@ -24,18 +24,21 @@ namespace ParallelBuildDebuggingLogger
             ProjectInstanceId = projectStartedEventArgs.BuildEventContext.ProjectInstanceId;
             GlobalProperties = projectStartedEventArgs.GlobalProperties;
 
-            foreach (var propertyName in GlobalProperties.Keys)
+            if (GlobalProperties != null)
             {
-                string parentValue;
-                if (otherProjects.ContainsKey(ParentProjectInstanceId) &&
-                    otherProjects[ParentProjectInstanceId].GlobalProperties.TryGetValue(propertyName, out parentValue) &&
-                    parentValue == GlobalProperties[propertyName])
+                foreach (var propertyName in GlobalProperties.Keys)
                 {
-                    // inherited from parent; uninteresting
-                }
-                else
-                {
-                    UniqueProperties[propertyName] = GlobalProperties[propertyName];
+                    string parentValue;
+                    if (otherProjects.ContainsKey(ParentProjectInstanceId) &&
+                        otherProjects[ParentProjectInstanceId].GlobalProperties.TryGetValue(propertyName, out parentValue) &&
+                        parentValue == GlobalProperties[propertyName])
+                    {
+                        // inherited from parent; uninteresting
+                    }
+                    else
+                    {
+                        UniqueProperties[propertyName] = GlobalProperties[propertyName];
+                    }
                 }
             }
         }

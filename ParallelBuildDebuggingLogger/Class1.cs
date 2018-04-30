@@ -78,9 +78,12 @@ namespace ParallelBuildDebuggingLogger
                     {
                         var instance = instances[i];
 
-                        foreach (var property in instance.GlobalProperties)
+                        if (instance.GlobalProperties != null)
                         {
-                            properties.GetOrAdd(property.Key, new string[instances.Count])[i] = property.Value;
+                            foreach (var property in instance.GlobalProperties)
+                            {
+                                properties.GetOrAdd(property.Key, new string[instances.Count])[i] = property.Value;
+                            }
                         }
                     }
 
