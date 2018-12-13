@@ -23,7 +23,7 @@ namespace ParallelBuildDebuggingLogger
             StartedEventArgs = projectStartedEventArgs;
             ParentProjectInstanceId = projectStartedEventArgs.ParentProjectBuildEventContext.ProjectInstanceId;
             ProjectInstanceId = projectStartedEventArgs.BuildEventContext.ProjectInstanceId;
-            GlobalProperties = projectStartedEventArgs.GlobalProperties;
+            GlobalProperties = projectStartedEventArgs.GlobalProperties ?? new Dictionary<string, string>();
 
             if (GlobalProperties == null)
             {
