@@ -41,7 +41,7 @@ namespace ParallelBuildDebuggingLogger
                 }
                 else
                 {
-                    UniqueProperties[propertyName] = GlobalProperties[propertyName];
+                    UniqueProperties[propertyName] = propertyName == "CurrentSolutionConfigurationContents" ? "{elided}" : GlobalProperties[propertyName];
                 }
             }
 
