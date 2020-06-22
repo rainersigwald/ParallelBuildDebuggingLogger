@@ -7,7 +7,7 @@ using Microsoft.Build.Utilities;
 
 namespace ParallelBuildDebuggingLogger
 {
-    public class Class1 : Logger
+    public class ParallelBuildDebuggingLogger : Logger
     {
         private Dictionary<int, ProjectBuildInfo> buildInfos = new Dictionary<int, ProjectBuildInfo>();
 
