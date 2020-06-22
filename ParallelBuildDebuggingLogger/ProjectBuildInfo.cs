@@ -15,34 +15,35 @@ namespace ParallelBuildDebuggingLogger
         public int ParentProjectInstanceId { get; set; }
 
         public IDictionary<string, string> GlobalProperties { get; set; }
-        public Dictionary<string, string> UniqueProperties { get; set; } = new Dictionary<string, string>();
+
+        private Dictionary<string, SortedSet<GlobalPropertyValue>> _globalPropertySubsets;
+
+        public IEnumerable<GlobalPropertyValue> UniqueProperties
+        {
+            get
+            {
+                var properties = new SortedSet<GlobalPropertyValue>(GlobalProperties.Select(GlobalPropertyValue.FromKeyValuePair));
+                var commonSubset = _globalPropertySubsets[StartedEventArgs.ProjectFile];
+
+                properties.ExceptWith(commonSubset);
+
+                return properties;
+            }
+        }
         public Dictionary<string, string> RemovedProperties { get; set; } = new Dictionary<string, string>();
 
-        public ProjectBuildInfo(ProjectStartedEventArgs projectStartedEventArgs, IReadOnlyDictionary<int, ProjectBuildInfo> otherProjects)
+        public ProjectBuildInfo(ProjectStartedEventArgs projectStartedEventArgs, IReadOnlyDictionary<int, ProjectBuildInfo> otherProjects, Dictionary<string, SortedSet<GlobalPropertyValue>> globalPropertySubsets)
         {
             StartedEventArgs = projectStartedEventArgs;
             ParentProjectInstanceId = projectStartedEventArgs.ParentProjectBuildEventContext.ProjectInstanceId;
             ProjectInstanceId = projectStartedEventArgs.BuildEventContext.ProjectInstanceId;
             GlobalProperties = projectStartedEventArgs.GlobalProperties ?? new Dictionary<string, string>();
 
+            _globalPropertySubsets = globalPropertySubsets;
+
             if (GlobalProperties == null)
             {
                 return;
-            }
-
-            foreach (var propertyName in GlobalProperties.Keys)
-            {
-                string parentValue;
-                if (otherProjects.ContainsKey(ParentProjectInstanceId) &&
-                    otherProjects[ParentProjectInstanceId].GlobalProperties.TryGetValue(propertyName, out parentValue) &&
-                    parentValue == GlobalProperties[propertyName])
-                {
-                    // inherited from parent; uninteresting
-                }
-                else
-                {
-                    UniqueProperties[propertyName] = propertyName == "CurrentSolutionConfigurationContents" ? "{elided}" : GlobalProperties[propertyName];
-                }
             }
 
             if (otherProjects.TryGetValue(ParentProjectInstanceId, out ProjectBuildInfo other))
@@ -64,7 +65,7 @@ namespace ParallelBuildDebuggingLogger
 
             if (UniqueProperties.Any())
             {
-                upDescription = $" + <{string.Join("; ", UniqueProperties.Select(up => $"{up.Key} = {up.Value}"))}>";
+                upDescription = $" + <{string.Join("; ", UniqueProperties.Select(up => $"{up.Name} = {up.Value}"))}>";
             }
 
             if (RemovedProperties.Any())
