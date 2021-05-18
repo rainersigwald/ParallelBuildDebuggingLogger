@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "ParallelBuildDebuggingLogger": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Preview\\MSBuild\\Current\\Bin\\MSBuild.exe",
+      "commandLineArgs": "-noconlog -l:S:\\ParallelBuildDebuggingLogger\\ParallelBuildDebuggingLogger\\bin\\Debug\\netstandard2.0\\ParallelBuildDebuggingLogger.dll S:\\msbuild\\artifacts\\log\\Debug\\Build.binlog",
+      "environmentVariables": {
+        "MSBUILDDEBUGONSTART": "1"
+      }
+    }
+  }
+}

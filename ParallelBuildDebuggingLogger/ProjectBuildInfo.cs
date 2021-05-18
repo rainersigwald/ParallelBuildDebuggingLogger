@@ -65,7 +65,7 @@ namespace ParallelBuildDebuggingLogger
 
             if (UniqueProperties.Any())
             {
-                upDescription = $" + <{string.Join("; ", UniqueProperties.Select(up => $"{up.Name} = {up.Value}"))}>";
+                upDescription = $" + <{string.Join("; ", UniqueProperties.Select(up => $"{up.Name} = {(up.Name == "CurrentSolutionConfigurationContents" ? "{elided}" : up.Value)}"))}>";
             }
 
             if (RemovedProperties.Any())
