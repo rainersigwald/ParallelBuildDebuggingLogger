@@ -69,7 +69,7 @@ namespace ParallelBuildDebuggingLogger
 
                 if (buildInfos.ContainsKey(info.ProjectInstanceId))
                 {
-                    file.WriteLine($"<li><a href=\"#{info.ParentProjectInstanceId}\">Reentering</a> project {info} from project {info.ParentProjectInstanceId} to build targets '{info.StartedEventArgs.TargetNames}'</li>");
+                    file.WriteLine($"<li><a href=\"#{info.ParentProjectInstanceId}\">Reentering</a> project {info.AnnotatedName} from project {info.ProjectIdLink} to build targets '{info.StartedEventArgs.TargetNames}'</li>");
                 }
                 else
                 {
