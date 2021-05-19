@@ -65,7 +65,7 @@ namespace ParallelBuildDebuggingLogger
 
             if (UniqueProperties.Any())
             {
-                upDescription = $" + <{string.Join("; ", UniqueProperties.Select(up => $"{up.Name} = {( (up.Name == "CurrentSolutionConfigurationContents" || up.Name == "RestoreGraphProjectInput" ) ? "{elided}" : up.Value)}"))}>";
+                upDescription = $" + <{string.Join("; ", UniqueProperties.Select(up => $"{up.Name} = {((up.Name == "CurrentSolutionConfigurationContents" || up.Name == "RestoreGraphProjectInput") ? "{elided}" : up.Value)}"))}>";
             }
 
             if (RemovedProperties.Any())
@@ -96,5 +96,14 @@ namespace ParallelBuildDebuggingLogger
                 $"{{{ProjectInstanceId}: \"{StartedEventArgs.ProjectFile}\"{upDescription}{rpDescription}}}";
         }
 
+        public string AnnotatedName
+        {
+            get => $"<ruby>{StartedEventArgs.ProjectFile}<rp>(</rp><rt>{ProjectInstanceId}</rt><rp>)</rp></ruby>";
+        }
+
+        public string ProjectIdLink
+        {
+            get => $"<a href=\"#{ParentProjectInstanceId}\">{ParentProjectInstanceId}</a>";
+        }
     }
 }

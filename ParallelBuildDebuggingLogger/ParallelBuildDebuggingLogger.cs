@@ -43,7 +43,7 @@ namespace ParallelBuildDebuggingLogger
             SortedSet<GlobalPropertyValue> commonProperties;
             if (globalPropertySubsets.TryGetValue(projectStartedEventArgs.ProjectFile, out commonProperties))
             {
-                commonProperties.IntersectWith(projectStartedEventArgs.GlobalProperties.Select(GlobalPropertyValue.FromKeyValuePair));
+                commonProperties.IntersectWith(projectStartedEventArgs.GlobalProperties?.Select(GlobalPropertyValue.FromKeyValuePair) ?? new SortedSet<GlobalPropertyValue>());
             }
             else
             {
@@ -58,6 +58,10 @@ namespace ParallelBuildDebuggingLogger
             using var file = new StreamWriter("PBDL.html", append: false);
 
             file.WriteLine("<html>");
+            file.WriteLine("<body>");
+            file.WriteLine("<ul>");
+
+            // TODO: anchor for id -1 ("start of build")
 
             foreach (var projectStartedEvent in projectStartedEvents)
             {
@@ -65,15 +69,17 @@ namespace ParallelBuildDebuggingLogger
 
                 if (buildInfos.ContainsKey(info.ProjectInstanceId))
                 {
-                    Console.WriteLine($"Reentering project {info} from project {info.ParentProjectInstanceId} to build targets '{info.StartedEventArgs.TargetNames}'");
+                    file.WriteLine($"<li><a href=\"#{info.ParentProjectInstanceId}\">Reentering</a> project {info} from project {info.ParentProjectInstanceId} to build targets '{info.StartedEventArgs.TargetNames}'</li>");
                 }
                 else
                 {
                     buildInfos.Add(info.ProjectInstanceId, info);
-                    Console.WriteLine($"Project {info} built by project {info.ParentProjectInstanceId} -- targets '{info.StartedEventArgs.TargetNames}'");
+                    file.WriteLine($"<li id=\"{info.ProjectInstanceId}\">Project {info.AnnotatedName} built by project {info.ProjectIdLink} -- targets '{info.StartedEventArgs.TargetNames}'</li>");
                 }
             }
 
+            file.WriteLine("</ul>");
+            file.WriteLine("</body>");
             file.WriteLine("</html>");
         }
     }
