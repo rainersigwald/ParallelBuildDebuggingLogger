@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.Build.Framework;
@@ -98,7 +99,7 @@ namespace ParallelBuildDebuggingLogger
 
         public string AnnotatedName
         {
-            get => $"<ruby>{StartedEventArgs.ProjectFile}<rp>(</rp><rt>{ProjectInstanceId}</rt><rp>)</rp></ruby>";
+            get => $"<ruby>{Path.GetFileName(StartedEventArgs.ProjectFile)}<rp>(</rp><rt>{ProjectInstanceId}</rt><rp>)</rp></ruby>";
         }
 
         public string ProjectIdLink
