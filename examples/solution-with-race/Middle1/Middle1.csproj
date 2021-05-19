@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\Base\Base.csproj" />
+    <ProjectReference Include="..\Base\Base.csproj" AdditionalProperties="SpecialMode=true" />
   </ItemGroup>
 
   <PropertyGroup>
