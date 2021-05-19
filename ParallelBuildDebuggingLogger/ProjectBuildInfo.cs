@@ -76,5 +76,25 @@ namespace ParallelBuildDebuggingLogger
             return
                 $"{{{ProjectInstanceId}: \"{StartedEventArgs.ProjectFile}\"{upDescription}{rpDescription}}}";
         }
+
+        public string ToHtml()
+        {
+            string upDescription = string.Empty;
+            string rpDescription = string.Empty;
+
+            //if (UniqueProperties.Any())
+            //{
+            //    upDescription = $" + <{string.Join("; ", UniqueProperties.Select(up => $"{up.Name} = {((up.Name == "CurrentSolutionConfigurationContents" || up.Name == "RestoreGraphProjectInput") ? "{elided}" : up.Value)}"))}>";
+            //}
+
+            //if (RemovedProperties.Any())
+            //{
+            //    rpDescription = $" - <{string.Join("; ", RemovedProperties.Select(rp => rp.Key))}>";
+            //}
+
+            return
+                $"{{{ProjectInstanceId}: \"{StartedEventArgs.ProjectFile}\"{upDescription}{rpDescription}}}";
+        }
+
     }
 }

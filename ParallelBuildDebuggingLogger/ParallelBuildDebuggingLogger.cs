@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -33,6 +34,7 @@ namespace ParallelBuildDebuggingLogger
             if (targetsOfInterest != null && targetsOfInterest.Contains(e.TargetName, StringComparer.OrdinalIgnoreCase))
             {
                 Console.WriteLine($"Building target '{e.TargetName}' in {buildInfos[e.BuildEventContext.ProjectInstanceId]}");
+                throw new NotImplementedException();
             }
         }
 
@@ -53,6 +55,10 @@ namespace ParallelBuildDebuggingLogger
 
         public override void Shutdown()
         {
+            using var file = new StreamWriter("PBDL.html", append: false);
+
+            file.WriteLine("<html>");
+
             foreach (var projectStartedEvent in projectStartedEvents)
             {
                 var info = new ProjectBuildInfo(projectStartedEvent, buildInfos, globalPropertySubsets);
@@ -67,6 +73,8 @@ namespace ParallelBuildDebuggingLogger
                     Console.WriteLine($"Project {info} built by project {info.ParentProjectInstanceId} -- targets '{info.StartedEventArgs.TargetNames}'");
                 }
             }
+
+            file.WriteLine("</html>");
         }
     }
 }
