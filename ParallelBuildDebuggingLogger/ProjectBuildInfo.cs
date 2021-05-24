@@ -83,23 +83,23 @@ namespace ParallelBuildDebuggingLogger
             string upDescription = string.Empty;
             string rpDescription = string.Empty;
 
-            //if (UniqueProperties.Any())
-            //{
-            //    upDescription = $" + <{string.Join("; ", UniqueProperties.Select(up => $"{up.Name} = {((up.Name == "CurrentSolutionConfigurationContents" || up.Name == "RestoreGraphProjectInput") ? "{elided}" : up.Value)}"))}>";
-            //}
+            if (UniqueProperties.Any())
+            {
+                upDescription = $"<div class=\"uniqueproperties\"><table><tr><td>{string.Join("</td></tr><tr><td>", UniqueProperties.Select(up => $"{up.Name}</td><td>{((up.Name == "CurrentSolutionConfigurationContents" || up.Name == "RestoreGraphProjectInput") ? "{elided}" : up.Value)}"))}</td></tr></table></div>";
+            }
 
-            //if (RemovedProperties.Any())
-            //{
-            //    rpDescription = $" - <{string.Join("; ", RemovedProperties.Select(rp => rp.Key))}>";
-            //}
+            if (RemovedProperties.Any())
+            {
+                rpDescription = $"<div class=\"removedproperties\">{string.Join("; ", RemovedProperties.Select(rp => rp.Key))}</div>";
+            }
 
             return
-                $"{{{ProjectInstanceId}: \"{StartedEventArgs.ProjectFile}\"{upDescription}{rpDescription}}}";
+                $"<h3>{StartedEventArgs.ProjectFile}</h3><br />{upDescription}{rpDescription}";
         }
 
         public string AnnotatedName
         {
-            get => $"<ruby>{Path.GetFileName(StartedEventArgs.ProjectFile)}<rp>(</rp><rt>{ProjectInstanceId}</rt><rp>)</rp></ruby>";
+            get => $"<span class=\"projectdescription\">{ProjectInstanceId}: {Path.GetFileName(StartedEventArgs.ProjectFile)}<span class=\"tooltiptext\">{ToHtml()}</span></span>";
         }
 
         public string ProjectIdLink
