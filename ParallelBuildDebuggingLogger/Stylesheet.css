@@ -1,3 +1,7 @@
+#searchbox {
+  width: 100%;
+}
+
 .projectdescription {
   position: relative;
   display: inline-block;

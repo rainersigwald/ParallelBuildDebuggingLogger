@@ -14,7 +14,10 @@
 	</resheader>
 
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-    <data name="Stylesheet" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Stylesheet.css;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;shift_jis</value>
+  <data name="Stylesheet" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Stylesheet.css;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Javascript" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Javascript.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

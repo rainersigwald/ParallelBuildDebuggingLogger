@@ -59,8 +59,10 @@ namespace ParallelBuildDebuggingLogger
 
             file.WriteLine("<html>");
             file.WriteLine($"<style>{ParallelBuildDebuggingLogger_Resources.Stylesheet}</style>");
+            file.WriteLine($"<script>{ParallelBuildDebuggingLogger_Resources.Javascript}</script>");
             file.WriteLine("<body>");
-            file.WriteLine("<ul>");
+            file.WriteLine("<input type=\"text\" id=\"searchbox\" onkeyup=\"filter()\" placeholder=\"Filter by project path or properties\" title=\"Type in a name\">");
+            file.WriteLine("<ul id=\"projects\">");
 
             // TODO: anchor for id -1 ("start of build")
 
