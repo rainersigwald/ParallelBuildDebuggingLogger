@@ -1,6 +1,6 @@
 <Project>
   <Target Name="BuildAndRun">
     <MSBuild Projects="..\ParallelBuildDebuggingLogger\ParallelBuildDebuggingLogger.csproj" />
-    <Exec Command="dotnet msbuild -noconlog -l:..\ParallelBuildDebuggingLogger\bin\Debug\netstandard2.0\ParallelBuildDebuggingLogger.dll ..\examples\solution-with-race\log-with-race-but-succeeded.binlog" />
+    <Exec Command="dotnet msbuild -noconlog -l:../ParallelBuildDebuggingLogger/bin/Debug/netstandard2.0/ParallelBuildDebuggingLogger.dll ../examples/solution-with-race/log-with-race-but-succeeded.binlog" />
   </Target>
 </Project>
