@@ -99,7 +99,7 @@ namespace ParallelBuildDebuggingLogger
 
         public string AnnotatedName
         {
-            get => $"<span class=\"projectdescription\">{ProjectInstanceId}: {Path.GetFileName(StartedEventArgs.ProjectFile)}<span class=\"tooltiptext\">{ToHtml()}</span></span>";
+            get => $"<span class=\"projectdescription\">{ProjectInstanceId}: <span class=\"shortfilename\">{Path.GetFileName(StartedEventArgs.ProjectFile)}</span><span class=\"tooltiptext\">{ToHtml()}</span></span>";
         }
 
         public string ProjectIdLink

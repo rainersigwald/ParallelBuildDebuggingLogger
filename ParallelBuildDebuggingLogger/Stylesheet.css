@@ -1,3 +1,7 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+}
+
 #searchbox {
   width: 100%;
 }
@@ -6,6 +10,10 @@
   position: relative;
   display: inline-block;
   border-bottom: 1px dotted black;
+}
+
+.projectdescription .shortfilename {
+  font-family: var(--codish);
 }
 
 .projectdescription .tooltiptext {
@@ -39,4 +47,12 @@
 
 .projectdescription:hover .tooltiptext {
   visibility: visible;
+}
+
+:root {
+  --codish: 'Cascadia Code', Consolas, monospace;
+}
+
+.targetnames {
+  font-family: var(--codish);
 }

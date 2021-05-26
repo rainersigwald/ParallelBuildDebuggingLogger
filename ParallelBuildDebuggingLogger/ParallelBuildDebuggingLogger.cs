@@ -73,12 +73,12 @@ namespace ParallelBuildDebuggingLogger
 
                 if (buildInfos.ContainsKey(info.ProjectInstanceId))
                 {
-                    file.WriteLine($"<li class=\"reentered\"><a href=\"#{info.ParentProjectInstanceId}\">Reentering</a> project {info.AnnotatedName} from project {info.ProjectIdLink} -- targets '{info.StartedEventArgs.TargetNames}'</li>");
+                    file.WriteLine($"<li class=\"reentered\"><a href=\"#{info.ParentProjectInstanceId}\">Reentering</a> project {info.AnnotatedName} from project {info.ProjectIdLink} -- {(info.StartedEventArgs.TargetNames.Length > 0 ? $"targets <span class=\"targetnames\">{info.StartedEventArgs.TargetNames}</span>" : "default targets")}</li>");
                 }
                 else
                 {
                     buildInfos.Add(info.ProjectInstanceId, info);
-                    file.WriteLine($"<li id=\"{info.ProjectInstanceId}\">Project {info.AnnotatedName} built by project {info.ProjectIdLink} -- targets '{info.StartedEventArgs.TargetNames}'</li>");
+                    file.WriteLine($"<li id=\"{info.ProjectInstanceId}\">Project {info.AnnotatedName} built by project {info.ProjectIdLink} -- {(info.StartedEventArgs.TargetNames.Length > 0 ? $"targets <span class=\"targetnames\">{info.StartedEventArgs.TargetNames}</span>" : "default targets")}</li>");
                 }
             }
 
