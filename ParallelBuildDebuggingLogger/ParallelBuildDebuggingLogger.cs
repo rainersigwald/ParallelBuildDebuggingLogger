@@ -47,7 +47,7 @@ namespace ParallelBuildDebuggingLogger
             }
             else
             {
-                globalPropertySubsets.Add(projectStartedEventArgs.ProjectFile, new SortedSet<GlobalPropertyValue>(projectStartedEventArgs.GlobalProperties.Select(GlobalPropertyValue.FromKeyValuePair)));
+                globalPropertySubsets.Add(projectStartedEventArgs.ProjectFile, new SortedSet<GlobalPropertyValue>(projectStartedEventArgs.GlobalProperties?.Select(GlobalPropertyValue.FromKeyValuePair) ?? Array.Empty<GlobalPropertyValue>()));
             }
 
             projectStartedEvents.Add(projectStartedEventArgs);
