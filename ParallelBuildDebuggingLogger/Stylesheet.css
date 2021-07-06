@@ -21,7 +21,7 @@ body {
 
 .projectdescription .tooltiptext {
   visibility: hidden;
-  width: 500px;
+  min-width: 500px;
   background-color: #555;
   color: #fff;
   text-align: center;
