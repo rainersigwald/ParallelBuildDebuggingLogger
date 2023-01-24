@@ -9,6 +9,10 @@ body {
   margin-bottom: 12px;
 }
 
+a.linktoproject {
+  text-decoration-line: underline;
+}
+
 .projectdescription {
   position: relative;
   display: inline-block;
