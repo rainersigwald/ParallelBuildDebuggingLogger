@@ -104,7 +104,7 @@ namespace ParallelBuildDebuggingLogger
 
         public string ProjectIdLink
         {
-            get => $"<a href=\"#{ParentProjectInstanceId}\">{ParentProjectInstanceId}</a>";
+            get => $"<a class=\"linktoproject\" onclick=\"show({ParentProjectInstanceId})\">{ParentProjectInstanceId}</a>";
         }
     }
 }

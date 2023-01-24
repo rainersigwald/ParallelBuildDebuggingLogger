@@ -21,3 +21,11 @@ function filter() {
         }
     }
 }
+
+function show(id) {
+    var destinationElement = document.getElementById(id);
+
+    destinationElement.style.display = "";
+
+    destinationElement.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+}
