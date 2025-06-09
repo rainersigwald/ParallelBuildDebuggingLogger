@@ -19,7 +19,7 @@ namespace ParallelBuildDebuggingLogger
 
             if (nameCompare == 0)
             {
-                return Value.CompareTo(Value);
+                return Value.CompareTo(other.Value);
             }
 
             return nameCompare;

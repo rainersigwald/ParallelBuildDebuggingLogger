@@ -18,6 +18,8 @@ namespace ParallelBuildDebuggingLogger
 
         private List<ProjectStartedEventArgs> projectStartedEvents = new List<ProjectStartedEventArgs>();
 
+        private HashSet<string> distinctSolutionConfigurations = new HashSet<string>();
+
         private string[] targetsOfInterest;
 
         public override void Initialize(IEventSource eventSource)
@@ -50,6 +52,12 @@ namespace ParallelBuildDebuggingLogger
                 globalPropertySubsets.Add(projectStartedEventArgs.ProjectFile, new SortedSet<GlobalPropertyValue>(projectStartedEventArgs.GlobalProperties?.Select(GlobalPropertyValue.FromKeyValuePair) ?? Array.Empty<GlobalPropertyValue>()));
             }
 
+            // Track distinct SolutionConfiguration values
+            if (projectStartedEventArgs.GlobalProperties?.TryGetValue("SolutionConfiguration", out string solutionConfig) == true)
+            {
+                distinctSolutionConfigurations.Add(solutionConfig);
+            }
+
             projectStartedEvents.Add(projectStartedEventArgs);
         }
 
@@ -69,7 +77,7 @@ namespace ParallelBuildDebuggingLogger
 
             foreach (var projectStartedEvent in projectStartedEvents)
             {
-                var info = new ProjectBuildInfo(projectStartedEvent, buildInfos, globalPropertySubsets);
+                var info = new ProjectBuildInfo(projectStartedEvent, buildInfos, globalPropertySubsets, distinctSolutionConfigurations);
 
                 if (buildInfos.ContainsKey(info.ProjectInstanceId))
                 {

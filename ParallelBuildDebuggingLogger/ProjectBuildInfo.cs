@@ -19,6 +19,8 @@ namespace ParallelBuildDebuggingLogger
 
         private Dictionary<string, SortedSet<GlobalPropertyValue>> _globalPropertySubsets;
 
+        private HashSet<string> _distinctSolutionConfigurations;
+
         public IEnumerable<GlobalPropertyValue> UniqueProperties
         {
             get
@@ -28,12 +30,23 @@ namespace ParallelBuildDebuggingLogger
 
                 properties.ExceptWith(commonSubset);
 
+                // If there are multiple distinct SolutionConfiguration values, include SolutionConfiguration in unique properties
+                if (_distinctSolutionConfigurations.Count > 1 && GlobalProperties.ContainsKey("SolutionConfiguration"))
+                {
+                    var solutionConfigProperty = new GlobalPropertyValue 
+                    { 
+                        Name = "SolutionConfiguration", 
+                        Value = GlobalProperties["SolutionConfiguration"] 
+                    };
+                    properties.Add(solutionConfigProperty);
+                }
+
                 return properties;
             }
         }
         public Dictionary<string, string> RemovedProperties { get; set; } = new Dictionary<string, string>();
 
-        public ProjectBuildInfo(ProjectStartedEventArgs projectStartedEventArgs, IReadOnlyDictionary<int, ProjectBuildInfo> otherProjects, Dictionary<string, SortedSet<GlobalPropertyValue>> globalPropertySubsets)
+        public ProjectBuildInfo(ProjectStartedEventArgs projectStartedEventArgs, IReadOnlyDictionary<int, ProjectBuildInfo> otherProjects, Dictionary<string, SortedSet<GlobalPropertyValue>> globalPropertySubsets, HashSet<string> distinctSolutionConfigurations)
         {
             StartedEventArgs = projectStartedEventArgs;
             ParentProjectInstanceId = projectStartedEventArgs.ParentProjectBuildEventContext.ProjectInstanceId;
@@ -41,6 +54,7 @@ namespace ParallelBuildDebuggingLogger
             GlobalProperties = projectStartedEventArgs.GlobalProperties ?? new Dictionary<string, string>();
 
             _globalPropertySubsets = globalPropertySubsets;
+            _distinctSolutionConfigurations = distinctSolutionConfigurations;
 
             if (GlobalProperties == null)
             {
@@ -66,7 +80,7 @@ namespace ParallelBuildDebuggingLogger
 
             if (UniqueProperties.Any())
             {
-                upDescription = $" + <{string.Join("; ", UniqueProperties.Select(up => $"{up.Name} = {((up.Name == "CurrentSolutionConfigurationContents" || up.Name == "RestoreGraphProjectInput") ? "{elided}" : up.Value)}"))}>";
+                upDescription = $" + <{string.Join("; ", UniqueProperties.Select(up => $"{up.Name} = {((up.Name == "CurrentSolutionConfigurationContents" || up.Name == "RestoreGraphProjectInput" || (up.Name == "SolutionConfiguration" && _distinctSolutionConfigurations.Count <= 1)) ? "{elided}" : up.Value)}"))}>";
             }
 
             if (RemovedProperties.Any())
@@ -85,7 +99,7 @@ namespace ParallelBuildDebuggingLogger
 
             if (UniqueProperties.Any())
             {
-                upDescription = $"<div class=\"uniqueproperties\"><table><tr><td>{string.Join("</td></tr><tr><td>", UniqueProperties.Select(up => $"{up.Name}</td><td>{((up.Name == "CurrentSolutionConfigurationContents" || up.Name == "RestoreGraphProjectInput") ? "{elided}" : up.Value)}"))}</td></tr></table></div>";
+                upDescription = $"<div class=\"uniqueproperties\"><table><tr><td>{string.Join("</td></tr><tr><td>", UniqueProperties.Select(up => $"{up.Name}</td><td>{((up.Name == "CurrentSolutionConfigurationContents" || up.Name == "RestoreGraphProjectInput" || (up.Name == "SolutionConfiguration" && _distinctSolutionConfigurations.Count <= 1)) ? "{elided}" : up.Value)}"))}</td></tr></table></div>";
             }
 
             if (RemovedProperties.Any())
