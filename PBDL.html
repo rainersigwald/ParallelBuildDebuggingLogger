@@ -1,0 +1,109 @@
+<html>
+<style>body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+}
+
+#searchbox {
+  width: 100%;
+  font-size: 1.5rem;
+  padding: 12px 20px 12px 20px;
+  margin-bottom: 12px;
+}
+
+a.linktoproject {
+  text-decoration-line: underline;
+}
+
+.projectdescription {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.projectdescription .shortfilename {
+  font-family: var(--codish);
+}
+
+.projectdescription .tooltiptext {
+  visibility: hidden;
+  min-width: 500px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  top: 150%;
+  left: 50%;
+  margin-left: -60px;
+}
+
+.projectdescription .tooltiptext::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-color: transparent transparent black transparent;
+}
+
+.uniqueproperties table {
+    color: #fff;
+}
+
+.projectdescription:hover .tooltiptext {
+  visibility: visible;
+}
+
+:root {
+  --codish: 'Cascadia Code', Consolas, monospace;
+}
+
+.targetnames {
+  font-family: var(--codish);
+}
+</style>
+<script>function filter() {
+    var filter, listitems, i, show;
+    filter = new RegExp(document.getElementById("searchbox").value, "i");
+    showreenter = document.getElementById("showreenter").checked;
+    listitems = document.getElementById("projects").getElementsByTagName("li");
+    for (i = 0; i < listitems.length; i++) {
+        show = true;
+
+        if (listitems[i].className === "reentered") {
+            show = showreenter;
+        }
+
+        if (!listitems[i].getElementsByClassName("projectdescription")[0].textContent.match(filter)) {
+            show = false;
+        }
+
+        if (show) {
+            listitems[i].style.display = "";
+        } else {
+            listitems[i].style.display = "none";
+        }
+    }
+}
+
+function show(id) {
+    var destinationElement = document.getElementById(id);
+
+    destinationElement.style.display = "";
+
+    destinationElement.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+}
+</script>
+<body>
+<input type="text" id="searchbox" onkeyup="filter()" placeholder="Filter by project path or properties" title="Type in a name">
+<input type="checkbox" id="showreenter" onclick="filter()" checked><label for="showreenter">Show reëntered projects</label>
+<ul id="projects">
+<li id="2">Project <span class="projectdescription">2: <span class="shortfilename">test_solution_config.proj</span><span class="tooltiptext"><h3>/tmp/test_solution_config.proj</h3><br /></span></span> built by project <a class="linktoproject" onclick="show(-1)">-1</a> -- targets <span class="targetnames">TestTarget</span></li>
+<li id="3">Project <span class="projectdescription">3: <span class="shortfilename">test_solution_config.proj</span><span class="tooltiptext"><h3>/tmp/test_solution_config.proj</h3><br /><div class="uniqueproperties"><table><tr><td>SolutionConfiguration</td><td>Debug</td></tr></table></div></span></span> built by project <a class="linktoproject" onclick="show(2)">2</a> -- targets <span class="targetnames">Build</span></li>
+<li id="4">Project <span class="projectdescription">4: <span class="shortfilename">test_solution_config.proj</span><span class="tooltiptext"><h3>/tmp/test_solution_config.proj</h3><br /><div class="uniqueproperties"><table><tr><td>SolutionConfiguration</td><td>Release</td></tr></table></div></span></span> built by project <a class="linktoproject" onclick="show(2)">2</a> -- targets <span class="targetnames">Build</span></li>
+</ul>
+</body>
+</html>
